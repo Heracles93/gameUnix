@@ -80,7 +80,7 @@ def replay():
     choice = input("Play again ? Yes or No")
     return choice.lower() == "yes"
 
-def main():
+def playgame():
     print(" Welcome to tic tac toe")
 
     while True:
@@ -134,4 +134,4 @@ def main():
         if not replay():
             break
 
-main()
+# playgame()

@@ -16,4 +16,5 @@ if game == 1:
     minesweeper.playgame()
 elif game == 2:
     import tictactoe
+    tictactoe.playgame()
     
