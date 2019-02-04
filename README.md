@@ -4,19 +4,21 @@
 
 ## Getting Started
 
-(Write here)
+This is a composition of several terminal game that you can on the desk.
 
 ### Prerequisites
 
-(Write here)
+You should at least have installed ipython with python 3+.
 
 ### Installing
 
 (Write here)
 
 ### Working
-
-(Write here)
+At the root of the folder, type the following: 
+```
+./startGame
+```
 
 ## Built With
 
