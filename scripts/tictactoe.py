@@ -15,8 +15,11 @@ def displayBoard(board):
     """
     print("\n"*100)
     print("\t"+board[7]+"|"+board[8]+"|"+board[9])
+    print("\t-----")
     print("\t"+board[4]+"|"+board[5]+"|"+board[6])
+    print("\t-----")
     print("\t"+board[1]+"|"+board[2]+"|"+board[3])
+    print("\n"*3)
 
 def playerInput():
     """
@@ -77,10 +80,11 @@ def placeChoice(board):
     return pos
 
 def replay():
-    choice = input("Play again ? Yes or No")
+    choice = input("Play again ? Yes or No\t")
     return choice.lower() == "yes"
 
 def playgame():
+    print("\n"*100)
     print(" Welcome to tic tac toe")
 
     while True:
@@ -91,7 +95,7 @@ def playgame():
         player1Marker, player2Marker = playerInput()
         turn = chooseFirst()
         print(turn+" will go first")
-        playGame = input("Ready to play ? y or n ").lower()
+        playGame = input("Ready to play ? y or n\t").lower()
         if playGame == "y":
             gameOn = True 
         else:
