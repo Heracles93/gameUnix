@@ -15,7 +15,7 @@ class Card:
 	def __str__(self):
 	return self.rank + " of " + self.suit
 
-class Deck
+class Deck:
 
 	def __init__(self):
 		self.deck = []
@@ -26,8 +26,8 @@ class Deck
 	def __str__(self):
 		deck_comp = ""
 			for card in self.deck:
-			deck_com += "\n" + card.__str__()
-		return "The deck has "+deck_comp
+			deckComp += "\n" + card.__str__()
+		return "The deck has " + deckComp
 		
 	def shuffle(self):
 		random.shuffle(self.deck)
@@ -35,9 +35,81 @@ class Deck
 	def deal(self)
 		return self.deck.pop()
 		
-test_deck = Deck()
-print(test_deck)
+# test_deck = Deck()
+# print(test_deck)
 
 
-		
-while playing:
+class Hand:
+
+	def __init__(self):
+		self.cards = []
+		self.value = 0
+		self.aces = 0
+
+	def addCard(self, card):
+		self.cards.append(card)
+		# card passed in
+		# from Deck.deal() --> single_Card(suit, rank)
+		self.value += values[card.rank]
+		# trach aces
+		if card.rank is "Ace":
+			self.aces += 1
+	
+	def adjustForAce(self):
+		while self.value > 21 and self.aces > 0:
+			self.value -= 10
+			self.aces += 1
+
+class Chips:
+
+	def __init__(self, total = 100):
+		self.total = total
+		self.bet = 0
+
+	def winBet(self):
+		self.total += self.bet
+
+	def loseBet(self):
+		self.total -= self.bet
+
+def hitOrStand(deck, hand):
+	global playing
+		while playing:
+			x = str(input("Hit or Stand ? enter h or s")).lower()
+			if x[0] == "h":
+				hit(deck, hand)
+			elif x[0] =="s":
+				print("Player Stands Dealer's Turn")
+				playing = False
+			else:
+				print("Sorry, I did no understand that, Please enter h or s only !")
+				continue
+			break
+
+def hit(deck, hand):
+	singleCard = deck.deal()
+	hand.addCard(singleCard)
+	hand.adjustForAce()
+
+def playerBusts(player, dealer, chips):
+	print("BUST PLAYER")
+	chips.loseBet()
+
+def playerWins(player, dealer, chips):
+	print("PLAYER WINS!")
+	chips.winBet()
+
+def dealerBusts(player, dealer, chips):
+	print("PLAYER WINS! DEALER BUSTED")
+	chips.winBet()
+
+def dealerWins(player, dealer, chips):
+	print("DEALER WINS!")
+	chips.loseBet()
+
+def push(player, dealer):
+	print("Dealer and player tie! PUSH")
+
+def showSome(player, dealer):
+
+def showAll(player, dealer):
