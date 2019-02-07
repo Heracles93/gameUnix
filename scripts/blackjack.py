@@ -1,4 +1,5 @@
 import random
+import pdb
 
 suits = ("Hearts","Diamonds", "Spades", "Clubs")
 ranks = ("Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace")
@@ -100,180 +101,194 @@ class Hand:
 		for x in range(startingCard,len(self.cards)):
 			self.cards[x].draw()
 
-# First Bet
-def makeBet():
-    ''' Ask the player for the bet amount and '''
-    
-    global bet
-    bet = 0
-    
-    print(' What amount of chips would you like to bet? (Enter whole integer please) ')
-    
-    # While loop to keep asking for the bet
-    while bet == 0:
-        betComp = input() # Use betComp as a checker
-        betComp = int(betComp)
-        # Check to make sure the bet is within the remaining amount of chips left.
-        if betComp >= 1 and betComp <= 100:#chipPool:
-            bet = betComp
-        else:
-            print("Invalid bet, you only have " + str(chipPool) + " remaining")
-
-def dealCards():
-    ''' This function deals out cards and sets up round '''
-    
-    # Set up all global variables
-    global result, playing, deck, playerHand, dealerHand, chipPool, bet
-    
-    # Create a deck
-    deck = Deck()
-    
-    #Shuffle it
-    deck.shuffle()
-    
-    #Set up bet
-    makeBet()
-    
-    # Set up both player and dealer hands
-    playerHand = Hand()
-    dealerHand = Hand()
-    
-    # Deal out initial cards
-    playerHand.addCard(deck.deal())
-    playerHand.addCard(deck.deal())
-    
-    dealerHand.addCard(deck.deal())
-    dealerHand.addCard(deck.deal())
-    
-    result = "Hit or Stand? Press either h or s: "
-    
-    if playing == True:
-        print('Fold, Sorry')
-        chipPool -= bet
-    
-    # Set up to know currently playing hand
-    playing = True 
-    gameStep()
+class Game:
 
 
+	def __init__(self):
+		self.hello = "HELLO"
+		self.playing = True # ???
+		
+		
+	def intro(self):
+		statement = '''Welcome to BlackJack! Get as close to 21 as you can without going over!
+		Dealer hits until she reaches 17. Aces count as 1 or 11.
+		Card output goes a letter followed by a number of face notation'''
+		print(statement)		
 
-def hit():
-    
-    ''' Implement the hit button '''
-    global playing,chipPool,deck,playerHand,dealerHand,result,bet
-    
-    # If hand is in play add card
-    if playing:
-        if playerHand.calcVal() <= 21:
-            playerHand.addCard(deck.deal())
-        
-        print("Player hand is %s" %playerHand)
-        
-        if playerHand.calcVal() > 21:
-            result = 'Busted! '+ restartPhrase
-            
-            chipPool -= bet
-            playing = False
-    
-    else:
-        result = "Sorry, can't hit" + restartPhrase
-    
-    gameStep()
+	# First Bet
+	def makeBet(self):
+		''' Ask the player for the bet amount and '''
+		
+		global bet
+		bet = 0
+		
+		print(' What amount of chips would you like to bet? (Enter whole integer please) ')
+		
+		# While loop to keep asking for the bet
+		while bet == 0:
+		    betComp = input() # Use betComp as a checker
+		    betComp = int(betComp)
+		    # Check to make sure the bet is within the remaining amount of chips left.
+		    if betComp >= 1 and betComp <= 100:#chipPool:
+		        bet = betComp
+		    else:
+		        print("Invalid bet, you only have " + str(chipPool) + " remaining")
+
+	def dealCards(self):
+		''' This function deals out cards and sets up round '''
+		
+		# Set up all global variables
+		global result, playing, deck, playerHand, dealerHand, chipPool, bet
+		
+		# Create a deck
+		deck = Deck()
+		
+		#Shuffle it
+		deck.shuffle()
+		
+		#Set up bet
+		self.makeBet()
+		
+		# Set up both player and dealer hands
+		playerHand = Hand()
+		dealerHand = Hand()
+		
+		# Deal out initial cards
+		playerHand.addCard(deck.deal())
+		playerHand.addCard(deck.deal())
+		
+		dealerHand.addCard(deck.deal())
+		dealerHand.addCard(deck.deal())
+		
+		result = "Hit or Stand? Press either h or s: "
+		
+		if playing == True:
+		    print('Fold, Sorry')
+		    chipPool -= bet
+		
+		# Set up to know currently playing hand
+		playing = True 
+		self.gameStep()
 
 
 
-def stand():
-    # global playing,chipPool,deck,playerHand,dealerHand,result,bet
-    ''' This function will now play the dealers hand, since stand was chosen '''
-    
-    if playing == False:
-        if playerHand.calcVal() > 0:
-            result = "Sorry, you can't stand!"
-            
-    # Now go through all the other possible options
-    else:
-        
-        # Soft 17 rule
-        while dealerHand.calcVal() < 17:
-            dealerHand.addCard(deck.deal())
-            
-        # Dealer Busts    
-        if dealerHand.calcVal() > 21:
-            result = 'Dealer busts! You win!' + restartPhrase
-            chipPool += bet
-            playing = False
-            
-        #Player has better hand than dealer
-        elif dealerHand.calcVal() < playerHand.calcVal():
-            result = 'You beat the dealer, you win!' + restartPhrase
-            chipPool += bet
-            playing = False
-        
-        # Push
-        elif dealerHand.calcVal() == playerHand.calcVal():
-            result = 'Tied up, push!' + restartPhrase
-            playing = False
-        
-        # Dealer beats player
-        else:
-            result = 'Dealer Wins!' + restartPhrase
-            chipPool -= bet
-            playing = False
-    gameStep()
+	def hit(self):
+		
+		''' Implement the hit button '''
+		global playing,chipPool,deck,playerHand,dealerHand,result,bet
+		chidPool = 100 # test debug
+		# If hand is in play add card
+		if playing:
+		    if playerHand.calcVal() <= 21:
+		        playerHand.addCard(deck.deal())
+		    
+		    print("Player hand is %s" %playerHand)
+		    
+		    if playerHand.calcVal() > 21:
+		        result = 'Busted! '+ restartPhrase
+		        
+		        # chipPool -= bet
+		        chidPool = 999
+		        playing = False
+		
+		else:
+		    result = "Sorry, can't hit" + restartPhrase
+		
+		self.gameStep()
 
-def gameStep():
-    'Function to printgame step/status on output'
-    
-    #Display Player Hand
-    print("")
-    print('Player Hand is: ')
-    playerHand.draw(hidden =False)
-    
-    print('Player hand total is: '+str(playerHand.calcVal()))
-    
-    #Display Dealer Hand
-    print('Dealer Hand is: '),
-    dealerHand.draw(hidden=True)
-    
-    # If game round is over
-    if playing == False:
-        print( " --- for a total of " + str(dealerHand.calcVal() ))
-        print("Chip Total: " + str(chipPool))
-    # Otherwise, don't know the second card yet
-    else: 
-        print(" with another card hidden upside down")
-    
-    # print(result of hit or stand.
-    print(result)
-    
-    playerInput()
 
-def gameExit():
-    print('Thanks for playing!')
-    exit()
 
-def playerInput():
-    ''' Read user input, lower case it just to be safe'''
-    plin = input().lower()
-    
-    
-    if plin == 'h':
-        hit()
-    elif plin == 's':
-        stand()
-    elif plin == 'd':
-        dealCards()
-    elif plin == 'q':
-        gameExit()
-    else:
-        print("Invalid Input...Enter h, s, d, or q: ")
-        playerInput()
+	def stand(self):
+		# global playing,chipPool,deck,playerHand,dealerHand,result,bet
+		''' This function will now play the dealers hand, since stand was chosen '''
+		
+		if playing == False:
+		    if playerHand.calcVal() > 0:
+		        result = "Sorry, you can't stand!"
+		        
+		# Now go through all the other possible options
+		else:
+		    
+		    # Soft 17 rule
+		    while dealerHand.calcVal() < 17:
+		        dealerHand.addCard(deck.deal())
+		        
+		    # Dealer Busts    
+		    if dealerHand.calcVal() > 21:
+		        result = 'Dealer busts! You win!' + restartPhrase
+		        chipPool += bet
+		        playing = False
+		        
+		    #Player has better hand than dealer
+		    elif dealerHand.calcVal() < playerHand.calcVal():
+		        result = 'You beat the dealer, you win!' + restartPhrase
+		        chipPool += bet
+		        playing = False
+		    
+		    # Push
+		    elif dealerHand.calcVal() == playerHand.calcVal():
+		        result = 'Tied up, push!' + restartPhrase
+		        playing = False
+		    
+		    # Dealer beats player
+		    else:
+		        result = 'Dealer Wins!' + restartPhrase
+		        chipPool -= bet
+		        playing = False
+		self.gameStep()
 
-def intro():
-    statement = '''Welcome to BlackJack! Get as close to 21 as you can without going over!
-    Dealer hits until she reaches 17. Aces count as 1 or 11.
-    Card output goes a letter followed by a number of face notation'''
-    print(statement)
+	def gameStep(self):
+		'Function to printgame step/status on output'
+		
+		#Display Player Hand
+		print("")
+		print('Player Hand is: ')
+		playerHand.draw(hidden =False)
+		
+		print('Player hand total is: '+str(playerHand.calcVal()))
+		
+		#Display Dealer Hand
+		print('Dealer Hand is: '),
+		dealerHand.draw(hidden=True)
+		
+		# If game round is over
+		if playing == False:
+		    print( " --- for a total of " + str(dealerHand.calcVal() ))
+		    chipPool = 3000 # test debug
+		    print("Chip Total: " + str(chipPool))
+		# Otherwise, don't know the second card yet
+		else: 
+		    print(" with another card hidden upside down")
+		
+		# print(result of hit or stand.
+		print(result)
+		
+		self.playerInput()
+
+	def gameExit(self):
+		print('Thanks for playing!')
+		exit()
+
+	def playerInput(self):
+		''' Read user input, lower case it just to be safe'''
+		#pdb.set_trace()
+		plin = 'h' # test debug
+		# plin = input().lower()
+		#pdb.set_trace()
+		
+		if plin == 'h':
+		    self.hit()
+		elif plin == 's':
+		    stand()
+		elif plin == 'd':
+		    dealCards()
+		elif plin == 'q':
+		    gameExit()
+		else:
+		    print("Invalid Input...Enter h, s, d, or q: ")
+		    self.playerInput()
+
+
 
 def main():
 	'''The following code will initiate the game! (Note: Need to Run all Cells)'''
@@ -286,8 +301,12 @@ def main():
 	playerHand = Hand()
 	dealerHand = Hand()
 	#print(the intro
-	intro()
+	game = Game()
+	#pdb.set_trace()
+	print(game.hello)
+	print(game.playing)
+	game.intro()
 	# Deal out the cards and start the game!
-	dealCards()
+	game.dealCards()
 
 main()
