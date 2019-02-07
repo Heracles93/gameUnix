@@ -5,9 +5,9 @@ suits = ("Hearts","Diamonds", "Spades", "Clubs")
 ranks = ("Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace")
 values = {"Two":2, "Three":3, "Four":4, "Five":5, "Six":6, "Seven":7, "Eight":8, "Nine":9, "Ten":10, "Jack":10, "Queen":10, "King":10, "Ace":11}
 
-playing = False
-bet = 1
-restartPhrase = "Press 'd' to deal the cards again, or press 'q' to quit"
+#playing = False
+#bet = 1
+restartPhrase = "\n Press 'd' to deal the cards again, or press 'q' to quit"
 
 class Card:
 
@@ -60,6 +60,7 @@ class Hand:
 		self.cards = []
 		self.value = 0
 		self.aces = 0
+		self.playing = True # debug
 
 	def __str__(self):
 		''' Return a string of current hand composition '''
@@ -93,7 +94,7 @@ class Hand:
 			return self.value
         
 	def draw(self,hidden):
-		if hidden == True and playing == True:
+		if hidden == True and self.playing == True:
             #Don't show first hidden card
 			startingCard = 1
 		else:
@@ -107,6 +108,9 @@ class Game:
 	def __init__(self):
 		self.hello = "HELLO"
 		self.playing = True # ???
+		self.recursionCounter = 0
+		self.chipPool = 100
+		self.bet = 0
 		
 		
 	def intro(self):
@@ -119,20 +123,20 @@ class Game:
 	def makeBet(self):
 		''' Ask the player for the bet amount and '''
 		
-		global bet
-		bet = 0
+		#global bet
+		#bet = 0
 		
 		print(' What amount of chips would you like to bet? (Enter whole integer please) ')
 		
 		# While loop to keep asking for the bet
-		while bet == 0:
+		while self.bet == 0:
 		    betComp = input() # Use betComp as a checker
 		    betComp = int(betComp)
 		    # Check to make sure the bet is within the remaining amount of chips left.
-		    if betComp >= 1 and betComp <= 100:#chipPool:
-		        bet = betComp
+		    if betComp >= 1 and betComp <= 100:#self.chipPool:
+		        self.bet = betComp
 		    else:
-		        print("Invalid bet, you only have " + str(chipPool) + " remaining")
+		        print("Invalid bet, you only have " + str(self.chipPool) + " remaining")
 
 	def dealCards(self):
 		''' This function deals out cards and sets up round '''
@@ -162,12 +166,12 @@ class Game:
 		
 		result = "Hit or Stand? Press either h or s: "
 		
-		if playing == True:
+		if self.playing == True:
 		    print('Fold, Sorry')
-		    chipPool -= bet
+		    self.chipPool -= self.bet
 		
 		# Set up to know currently playing hand
-		playing = True 
+		self.playing = True 
 		self.gameStep()
 
 
@@ -176,9 +180,9 @@ class Game:
 		
 		''' Implement the hit button '''
 		global playing,chipPool,deck,playerHand,dealerHand,result,bet
-		chidPool = 100 # test debug
+		#self.chipPool = 100 # test debug
 		# If hand is in play add card
-		if playing:
+		if self.playing:
 		    if playerHand.calcVal() <= 21:
 		        playerHand.addCard(deck.deal())
 		    
@@ -187,9 +191,9 @@ class Game:
 		    if playerHand.calcVal() > 21:
 		        result = 'Busted! '+ restartPhrase
 		        
-		        # chipPool -= bet
-		        chidPool = 999
-		        playing = False
+		        self.chipPool -= self.bet
+		        #self.chipPool = 999
+		        self.playing = False
 		
 		else:
 		    result = "Sorry, can't hit" + restartPhrase
@@ -202,7 +206,7 @@ class Game:
 		# global playing,chipPool,deck,playerHand,dealerHand,result,bet
 		''' This function will now play the dealers hand, since stand was chosen '''
 		
-		if playing == False:
+		if self.playing == False:
 		    if playerHand.calcVal() > 0:
 		        result = "Sorry, you can't stand!"
 		        
@@ -216,25 +220,25 @@ class Game:
 		    # Dealer Busts    
 		    if dealerHand.calcVal() > 21:
 		        result = 'Dealer busts! You win!' + restartPhrase
-		        chipPool += bet
-		        playing = False
+		        self.chipPool += self.bet
+		        self.playing = False
 		        
 		    #Player has better hand than dealer
 		    elif dealerHand.calcVal() < playerHand.calcVal():
 		        result = 'You beat the dealer, you win!' + restartPhrase
-		        chipPool += bet
-		        playing = False
+		        self.chipPool += self.bet
+		        self.playing = False
 		    
 		    # Push
 		    elif dealerHand.calcVal() == playerHand.calcVal():
 		        result = 'Tied up, push!' + restartPhrase
-		        playing = False
+		        self.playing = False
 		    
 		    # Dealer beats player
 		    else:
 		        result = 'Dealer Wins!' + restartPhrase
-		        chipPool -= bet
-		        playing = False
+		        self.chipPool -= self.bet
+		        self.playing = False
 		self.gameStep()
 
 	def gameStep(self):
@@ -252,10 +256,10 @@ class Game:
 		dealerHand.draw(hidden=True)
 		
 		# If game round is over
-		if playing == False:
+		if self.playing == False:
 		    print( " --- for a total of " + str(dealerHand.calcVal() ))
-		    chipPool = 3000 # test debug
-		    print("Chip Total: " + str(chipPool))
+		    #self.chipPool = 3000 # test debug
+		    print("Chip Total: " + str(self.chipPool))
 		# Otherwise, don't know the second card yet
 		else: 
 		    print(" with another card hidden upside down")
@@ -272,21 +276,31 @@ class Game:
 	def playerInput(self):
 		''' Read user input, lower case it just to be safe'''
 		#pdb.set_trace()
-		plin = 'h' # test debug
+		#plin = 'h' # test debug
+		plin = str(input())
 		# plin = input().lower()
 		#pdb.set_trace()
 		
-		if plin == 'h':
-		    self.hit()
+		if plin == "h":
+			self.recursionCounter += 1
+			print(self.recursionCounter)
+			self.hit()
 		elif plin == 's':
-		    stand()
+			self.recursionCounter += 1
+			print(self.recursionCounter)
+			self.stand()
 		elif plin == 'd':
-		    dealCards()
+			self.recursionCounter += 1
+			print(self.recursionCounter)
+			self.dealCards()
 		elif plin == 'q':
-		    gameExit()
+			self.recursionCounter += 1
+			print(self.recursionCounter)
+			self.gameExit()
 		else:
 		    print("Invalid Input...Enter h, s, d, or q: ")
 		    self.playerInput()
+		
 
 
 
