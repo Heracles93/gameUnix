@@ -7,9 +7,9 @@ print(" \__, |\__,_|_| |_| |_|\___|\___/|_| |_|_/_/\_\ ")
 print(" |___/   ")
 
 print("Press Enter to start the minesweeper")
-game = 0
-while game not in [1,2]:
-    game = int(input("Enter '1' to start the minesweeper & '2' to start tictactoe"))
+game = None
+while game not in [1,2,3]:
+    game = int(input("Enter '1' to start the minesweeper & '2' to start tictactoe & '3' to start blackjack"))
 
 if game == 1:
     import minesweeper
@@ -17,4 +17,7 @@ if game == 1:
 elif game == 2:
     import tictactoe
     tictactoe.playgame()
+elif game == 3:
+    import blackjack
+    blackjack.main()
     
